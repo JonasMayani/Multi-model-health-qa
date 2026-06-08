@@ -1,0 +1,141 @@
+seed: 42
+
+data:
+  train_csv: /workspace/data/train_augmented.csv
+  val_csv: /workspace/data/val_clean_quality.csv
+  test_csv: /workspace/data/Test.csv
+  output_root: /workspace/healthqa_multimodel_runs
+  submission_dir: /workspace/healthqa_multimodel_runs/submissions
+  id_column: ID
+  question_column: input
+  answer_column: output
+  subset_column: subset
+
+training_defaults:
+  load_in_4bit: true
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_compute_dtype: float16
+  bnb_4bit_use_double_quant: true
+  gradient_checkpointing: true
+  optim: paged_adamw_8bit
+  learning_rate: 0.00015
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  lr_scheduler_type: cosine
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 8
+  max_seq_length: 768
+  logging_steps: 20
+  save_strategy: epoch
+  evaluation_strategy: epoch
+  save_total_limit: 2
+  max_grad_norm: 0.3
+  fp16: true
+  bf16: false
+  max_train_rows:
+  max_eval_rows:
+  answer_only_loss: true
+
+oom_retry:
+  enabled: true
+  attempts:
+    - per_device_train_batch_size: 2
+      gradient_accumulation_steps: 8
+      max_seq_length: 768
+    - per_device_train_batch_size: 1
+      gradient_accumulation_steps: 16
+      max_seq_length: 768
+    - per_device_train_batch_size: 1
+      gradient_accumulation_steps: 16
+      max_seq_length: 640
+    - per_device_train_batch_size: 1
+      gradient_accumulation_steps: 24
+      max_seq_length: 512
+
+generation:
+  max_new_tokens: 256
+  do_sample: false
+  temperature: 0.0
+  top_p: 1.0
+  num_beams_causal: 1
+  num_beams_seq2seq: 4
+  repetition_penalty: 1.05
+
+routes:
+  amh:
+    display_name: Amharic Health QA
+    model_name: McGill-NLP/AfriqueQwen-14B
+    architecture: causal
+    subsets: [Amh_Eth]
+    language_name: Amharic
+    adapter_name: amh_afriqueqwen_lora
+    trust_remote_code: false
+    lora:
+      r: 16
+      alpha: 32
+      dropout: 0.05
+      target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+
+  swa:
+    display_name: Swahili Health QA
+    model_name: McGill-NLP/AfriqueQwen-14B
+    architecture: causal
+    subsets: [Swa_Ken]
+    language_name: Swahili
+    adapter_name: swa_afriqueqwen_lora
+    trust_remote_code: false
+    lora:
+      r: 16
+      alpha: 32
+      dropout: 0.05
+      target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+
+  lug:
+    display_name: Luganda Health QA
+    model_name: Sunbird/Sunflower-14B
+    architecture: causal
+    subsets: [Lug_Uga]
+    language_name: Luganda
+    adapter_name: lug_sunflower_lora
+    trust_remote_code: false
+    lora:
+      r: 16
+      alpha: 32
+      dropout: 0.05
+      target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+
+  aka:
+    display_name: Akan/Twi Health QA
+    model_name: CohereLabs/aya-101
+    architecture: seq2seq
+    subsets: [Aka_Gha]
+    language_name: Akan/Twi
+    adapter_name: aka_aya101_lora
+    trust_remote_code: false
+    lora:
+      r: 16
+      alpha: 32
+      dropout: 0.05
+      target_modules: [q, v]
+    training:
+      learning_rate: 0.0002
+      per_device_train_batch_size: 4
+      per_device_eval_batch_size: 4
+      gradient_accumulation_steps: 4
+      max_seq_length: 512
+
+  eng:
+    display_name: Shared English Health QA
+    model_name: Qwen/Qwen3-14B
+    architecture: causal
+    subsets: [Eng_Uga, Eng_Gha, Eng_Eth, Eng_Ken]
+    language_name: English
+    adapter_name: eng_qwen3_lora
+    trust_remote_code: false
+    lora:
+      r: 16
+      alpha: 32
+      dropout: 0.05
+      target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]

@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Runtime outputs
+outputs/
+runs/
+checkpoints/
+models/
+wandb/
+mlruns/
+*.log
+
+# Data and generated submissions
+data/
+*.csv
+*.jsonl
+*.parquet
+*.arrow
+*.npz
+
+# Model artifacts
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+adapter_model.*
+
+# Secrets
+.env
+*.key
+*.pem
+hf_token*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

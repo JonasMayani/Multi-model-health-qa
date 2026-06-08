@@ -1,0 +1,15 @@
+torch>=2.3
+transformers>=4.51,<5
+accelerate>=0.33
+bitsandbytes>=0.43
+peft>=0.12
+trl>=0.9
+datasets>=2.20
+pandas>=2.0
+pyyaml>=6.0
+tqdm>=4.66
+rouge-score>=0.1.2
+safetensors>=0.4.3
+sentencepiece>=0.2.0
+protobuf>=4.25
+
