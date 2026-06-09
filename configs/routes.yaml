@@ -1,11 +1,11 @@
 seed: 42
 
 data:
-  train_csv: /workspace/data/train_clean_quality.csv
-  val_csv: /workspace/data/val_clean_quality.csv
-  test_csv: /workspace/data/Test.csv
-  output_root: /workspace/healthqa_multimodel_runs
-  submission_dir: /workspace/healthqa_multimodel_runs/submissions
+  train_csv: /workspace/Multi-model-health-qa/data/train_clean_quality.csv
+  val_csv: /workspace/Multi-model-health-qa/data/val_clean_quality.csv
+  test_csv: /workspace/Multi-model-health-qa/data/Test.csv
+  output_root: /workspace/Multi-model-health-qa/healthqa_multimodel_runs
+  submission_dir: /workspace/Multi-model-health-qa/healthqa_multimodel_runs/submissions
   id_column: ID
   question_column: input
   answer_column: output
@@ -22,7 +22,7 @@ training_defaults:
   warmup_ratio: 0.05
   weight_decay: 0.01
   lr_scheduler_type: cosine
-  num_train_epochs: 3
+  num_train_epochs: 4
   per_device_train_batch_size: 2
   per_device_eval_batch_size: 2
   gradient_accumulation_steps: 8
@@ -41,11 +41,11 @@ training_defaults:
 oom_retry:
   enabled: true
   attempts:
+    - per_device_train_batch_size: 4
+      gradient_accumulation_steps: 8
+      max_seq_length: 896
     - per_device_train_batch_size: 2
       gradient_accumulation_steps: 8
-      max_seq_length: 768
-    - per_device_train_batch_size: 1
-      gradient_accumulation_steps: 16
       max_seq_length: 768
     - per_device_train_batch_size: 1
       gradient_accumulation_steps: 16
@@ -120,11 +120,24 @@ routes:
       dropout: 0.05
       target_modules: [q, v]
     training:
-      learning_rate: 0.0002
-      per_device_train_batch_size: 4
-      per_device_eval_batch_size: 4
-      gradient_accumulation_steps: 4
-      max_seq_length: 512
+      load_in_4bit: false
+      fp16: false
+      bf16: true
+      optim: adamw_torch_fused
+      learning_rate: 0.00005
+      per_device_train_batch_size: 2
+      per_device_eval_batch_size: 2
+      gradient_accumulation_steps: 8
+      max_seq_length: 768
+      num_train_epochs: 3
+      warmup_ratio: 0.05
+      weight_decay: 0.01
+      lr_scheduler_type: cosine
+      max_grad_norm: 0.3
+      logging_steps: 20
+      save_strategy: epoch
+      evaluation_strategy: epoch
+      save_total_limit: 3
 
   eng:
     display_name: Shared English Health QA
