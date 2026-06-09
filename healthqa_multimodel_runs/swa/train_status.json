@@ -1,0 +1,43 @@
+{
+  "route": "swa",
+  "model_name": "McGill-NLP/AfriqueQwen-14B",
+  "subsets": [
+    "Swa_Ken"
+  ],
+  "final_adapter": "/workspace/Multi-model-health-qa/healthqa_multimodel_runs/swa/final_adapter",
+  "train_metrics": {
+    "train_runtime": 4358.107,
+    "train_samples_per_second": 2.23,
+    "train_steps_per_second": 0.07,
+    "total_flos": 3.847951488908083e+17,
+    "train_loss": 0.4075479425367762,
+    "epoch": 5.0
+  },
+  "training_config": {
+    "load_in_4bit": true,
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_compute_dtype": "float16",
+    "bnb_4bit_use_double_quant": true,
+    "gradient_checkpointing": true,
+    "optim": "paged_adamw_8bit",
+    "learning_rate": 0.00015,
+    "warmup_ratio": 0.05,
+    "weight_decay": 0.01,
+    "lr_scheduler_type": "cosine",
+    "num_train_epochs": 5,
+    "per_device_train_batch_size": 4,
+    "per_device_eval_batch_size": 2,
+    "gradient_accumulation_steps": 8,
+    "max_seq_length": 896,
+    "logging_steps": 20,
+    "save_strategy": "epoch",
+    "evaluation_strategy": "epoch",
+    "save_total_limit": 2,
+    "max_grad_norm": 0.3,
+    "fp16": true,
+    "bf16": false,
+    "max_train_rows": null,
+    "max_eval_rows": null,
+    "answer_only_loss": true
+  }
+}
