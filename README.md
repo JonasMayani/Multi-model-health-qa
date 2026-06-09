@@ -62,9 +62,9 @@ ID,input,output,subset
 ```bash
 python scripts/train_all.py \
   --config configs/routes.yaml \
-  --train_csv /workspace/data/train_augmented.csv \
-  --val_csv /workspace/data/val_clean_quality.csv \
-  --output_root /workspace/healthqa_multimodel_runs
+  --train_csv /workspace/Multi-model-health-qa/data/train_clean_quality.csv \
+  --val_csv /workspace/Multi-model-health-qa/data/val_clean_quality.csv \
+  --output_root /workspace/Multi-model-health-qa/healthqa_multimodel_runs
 ```
 
 Train one route only:
@@ -72,8 +72,8 @@ Train one route only:
 ```bash
 python scripts/train_route.py \
   --config configs/routes.yaml \
-  --route amh \
-  --train_csv /workspace/data/train_augmented.csv \
+  --route aka \
+  --train_csv /workspace/data/train_clean_quality.csv \
   --val_csv /workspace/data/val_clean_quality.csv \
   --output_root /workspace/healthqa_multimodel_runs
 ```
