@@ -1,7 +1,7 @@
 seed: 42
 
 data:
-  train_csv: /workspace/data/train_augmented.csv
+  train_csv: /workspace/data/train_clean_quality.csv
   val_csv: /workspace/data/val_clean_quality.csv
   test_csv: /workspace/data/Test.csv
   output_root: /workspace/healthqa_multimodel_runs
